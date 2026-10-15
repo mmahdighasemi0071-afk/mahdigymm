@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>برنامه تمرینی محمد مهدی قاسمی</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23ff6b6b'/><stop offset='1' stop-color='%23ee5a24'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23g)'/><text x='50' y='72' font-size='65' font-weight='900' font-family='Arial' fill='white' text-anchor='middle'>م</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    padding: 20px;
+    color: #fff;
+    line-height: 1.8;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* === هدر باشگاه === */
+  .gym-header {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  .gym-brand { display: flex; align-items: center; gap: 14px; }
+  .gym-logo {
+    width: 60px; height: 60px; border-radius: 14px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8em; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+    overflow: hidden;
+  }
+  .gym-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .gym-info .gym-name { font-size: 1.2em; font-weight: 900; color: #fff; line-height: 1.3; }
+  .gym-info .gym-sub { font-size: 0.78em; color: #ff8fa3; font-weight: 500; margin-top: 2px; }
+  .gym-contact { text-align: left; font-size: 0.85em; color: #ffd54f; font-weight: 600; direction: ltr; }
+
+  /* === هدر شخصی === */
+  .personal-header {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 14px 22px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  .personal-header .name { font-size: 1.05em; font-weight: 700; color: #fff; }
+  .personal-header .name span { color: #ff8fa3; font-weight: 400; font-size: 0.85em; margin-right: 6px; }
+  .personal-header .date { font-size: 0.9em; color: #ffd54f; font-weight: 600; }
+
+  /* === کارت شهریه === */
+  .fee-card {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.1));
+    border: 1px solid rgba(79, 172, 254, 0.35);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  .fee-card h3 {
+    font-size: 1em; color: #7ecbff;
+    margin-bottom: 14px; display: flex;
+    align-items: center; gap: 8px; font-weight: 700;
+  }
+  .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fee-item {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .fee-item .label { font-size: 0.78em; color: #a5b4fc; margin-bottom: 8px; font-weight: 600; }
+  .fee-item .value { font-size: 1.15em; font-weight: 900; color: #fff; line-height: 1.4; }
+  .fee-item .value.due { color: #ff8fa3; }
+  .fee-item .value.ok { color: #6ee7a0; }
+  .fee-item .value.warning { color: #ffd54f; }
+  .fee-item .value.danger { color: #ff6b6b; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .fee-progress {
+    margin-top: 14px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .fee-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #43e97b, #38f9d7);
+    border-radius: 10px;
+    transition: width 0.6s ease;
+  }
+  .fee-progress-bar.warning { background: linear-gradient(90deg, #ffd54f, #ffb300); }
+  .fee-progress-bar.danger { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+
+  /* === هدر اصلی === */
+  header {
+    text-align: center;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    border-radius: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 40px rgba(238, 90, 36, 0.4);
+  }
+  header h1 { font-size: 1.7em; font-weight: 900; margin-bottom: 8px; }
+  header p { font-size: 0.9em; opacity: 0.95; }
+
+  /* === شعار === */
+  .slogan {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(240, 147, 251, 0.15), rgba(245, 87, 108, 0.15));
+    border: 1px dashed rgba(240, 147, 251, 0.4);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 25px;
+    font-size: 1em;
+    font-weight: 700;
+    color: #f5a9ff;
+  }
+  .slogan span { display: block; font-size: 0.8em; font-weight: 400; color: #d8b4fe; margin-top: 6px; }
+
+  /* === روزها === */
+  .day {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  .day-title {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 1.2em; font-weight: 700;
+    margin-bottom: 16px; padding-bottom: 12px;
+    border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
+  }
+  .day-num {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 0.9em; flex-shrink: 0;
+  }
+  .day.mamoot .day-num { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .day.drop .day-num { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+  th {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 8px; text-align: right; font-weight: 700;
+    border-radius: 8px 8px 0 0; font-size: 0.88em;
+  }
+  td { padding: 10px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255, 255, 255, 0.04); }
+
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.78em; font-weight: 600; }
+  .tag.drop { background: rgba(79, 172, 254, 0.25); color: #7ecbff; }
+  .tag.super { background: rgba(255, 193, 7, 0.25); color: #ffd54f; }
+  .tag.normal { background: rgba(67, 233, 123, 0.25); color: #6ee7a0; }
+
+  .note {
+    background: rgba(255, 193, 7, 0.12);
+    border-right: 4px solid #ffc107;
+    padding: 12px 15px; border-radius: 10px;
+    margin-top: 12px; font-size: 0.85em; color: #ffe082;
+  }
+
+  .warn {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(238, 90, 36, 0.15));
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 18px; padding: 22px; margin-top: 25px;
+  }
+  .warn h3 { color: #ff8fa3; margin-bottom: 12px; font-size: 1.1em; }
+  .warn ul { list-style: none; }
+  .warn li { padding: 7px 0; padding-right: 22px; position: relative; font-size: 0.9em; }
+  .warn li::before { content: "⚠️"; position: absolute; right: 0; }
+
+  /* === فوتر تماس === */
+  .contact-footer {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    border-radius: 18px;
+    padding: 25px 20px;
+    margin-top: 25px;
+    text-align: center;
+    color: #0f0c29;
+    box-shadow: 0 10px 35px rgba(67, 233, 123, 0.3);
+  }
+  .contact-footer h3 { font-size: 1.1em; font-weight: 900; margin-bottom: 10px; }
+  .contact-footer .phone {
+    font-size: 1.4em; font-weight: 900; letter-spacing: 2px;
+    margin: 12px 0; color: #0f0c29; direction: ltr;
+    display: inline-block; background: rgba(255, 255, 255, 0.4);
+    padding: 8px 20px; border-radius: 12px;
+  }
+  .contact-footer .apps { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .contact-footer .app-badge {
+    background: rgba(15, 12, 41, 0.85); color: #fff;
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 0.82em; font-weight: 600;
+  }
+  .contact-footer p { font-size: 0.88em; margin-top: 10px; font-weight: 600; opacity: 0.85; }
+
+  footer { text-align: center; padding: 20px; opacity: 0.5; font-size: 0.8em; }
+
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    header h1 { font-size: 1.35em; }
+    .personal-header, .gym-header { flex-direction: column; text-align: center; }
+    .gym-brand { flex-direction: column; text-align: center; }
+    .gym-contact { text-align: center; }
+    .fee-grid { grid-template-columns: 1fr; }
+    .day { padding: 15px; }
+    table { font-size: 0.8em; }
+    th, td { padding: 8px 5px; }
+    .contact-footer .phone { font-size: 1.1em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- === هدر باشگاه === -->
+  <div class="gym-header">
+    <div class="gym-brand">
+      <div class="gym-logo">🏋️</div>
+      <div class="gym-info">
+        <div class="gym-name">باشگاه بدنسازی ماموت</div>
+        <div class="gym-sub">قدرت • حجم • استقامت</div>
+      </div>
+    </div>
+    <div class="gym-contact">📞 ۰۹۰۲۳۹۸۹۷۸۸</div>
+  </div>
+
+  <!-- === هدر شخصی === -->
+  <div class="personal-header">
+    <div class="name">👤 محمد مهدی قاسمی <span>— ورزشکار</span></div>
+    <div class="date">📅 ۱۴۰۵/۰۷/۲۵</div>
+  </div>
+
+  <!-- === کارت شهریه === -->
+  <div class="fee-card">
+    <h3>💳 وضعیت شهریه</h3>
+    <div class="fee-grid">
+      <div class="fee-item">
+        <div class="label">📅 تاریخ سررسید پرداخت</div>
+        <div class="value due" id="due-date">در حال محاسبه...</div>
+      </div>
+      <div class="fee-item">
+        <div class="label">⏳ مدت زمان باقی‌مانده</div>
+        <div class="value ok" id="remaining-time">در حال محاسبه...</div>
+      </div>
+    </div>
+    <div class="fee-progress">
+      <div class="fee-progress-bar" id="progress-bar" style="width: 0%;"></div>
+    </div>
+  </div>
+
+  <!-- === هدر اصلی === -->
+  <header>
+    <h1>🔥 برنامه تمرینی ۶ روزه</h1>
+    <p>سیستم ماموت + دراپ‌ست | تک‌عضله‌ای + چندعضله‌ای</p>
+  </header>
+
+  <!-- === شعار === -->
+  <div class="slogan">
+    «درد امروز، قدرت فرداست — تسلیم نشو، ماموت بساز» 💪
+    <span>No Pain, No Mammoth</span>
+  </div>
+
+  <!-- روز ۱ -->
+  <div class="day mamoot">
+    <div class="day-title"><span class="day-num">۱</span><span>سینه — سیستم ماموت</span></div>
+    <table>
+      <tr><th>بلوک</th><th>حرکات</th><th>تکرار</th></tr>
+      <tr><td>۱</td><td>پرس سینه هالتر + پرس دمبل جفت موازی + پرس بالاسینه دمبل + پرس سینه هالتر دست‌جمع</td><td>۶-۸</td></tr>
+      <tr><td>۲</td><td>پرس بالاسینه هالتر + فلای سینه دستگاه + پرس سینه دستگاه + کراس اوور</td><td>۶-۸</td></tr>
+      <tr><td>۳</td><td>پرس زیرسینه هالتر + فلای زیرسینه دمبل + پرس بالاسینه دست‌جمع + قفسه سینه اسمیت</td><td>۶-۸</td></tr>
+      <tr><td>۴</td><td>شنا دست باز</td><td>تا ناتوانی</td></tr>
+    </table>
+    <div class="note">⏱ استراحت: ۸-۱۰ ثانیه بین حرکات داخل بلوک | ۱.۵-۲ دقیقه بین بلوک‌ها</div>
+  </div>
+
+  <!-- روز ۲ -->
+  <div class="day mamoot">
+    <div class="day-title"><span class="day-num">۲</span><span>بازو + ساعد — سیستم ماموت</span></div>
+    <table>
+      <tr><th>بلوک</th><th>حرکات</th><th>تکرار</th></tr>
+      <tr><td>۱</td><td>جلو بازو میله صاف سیم‌کش + EZ هالتر خم ایستاده + دست‌عکس میله صاف سیم‌کش + دمبل تناوبی</td><td>۶-۸</td></tr>
+      <tr><td>۲</td><td>پشت بازو میله صاف سیم‌کش + سیم‌کش V + دستگاه دیپ + دمبل تک و جفت</td><td>۶-۸</td></tr>
+      <tr><td>۳</td><td>جلو بازو میله صاف نشسته + دمبل چکشی شیب‌دار + پشت بازو هالتر خوابیده + سیم‌کش کراس</td><td>۶-۸</td></tr>
+      <tr><td>۴</td><td>ساعد صفه + مچ‌کردن + دستگاه + دمبل چرخشی</td><td>۱۰-۱۲</td></tr>
+    </table>
+    <div class="note">⏱ استراحت: ۸-۱۰ ثانیه بین حرکات داخل بلوک | ۱.۵-۲ دقیقه بین بلوک‌ها</div>
+  </div>
+
+  <!-- روز ۳ -->
+  <div class="day mamoot">
+    <div class="day-title"><span class="day-num">۳</span><span>پا + شکم — سیستم ماموت</span></div>
+    <table>
+      <tr><th>بلوک</th><th>حرکات</th><th>تکرار</th></tr>
+      <tr><td>۱</td><td>اسکات هالتر + هاگ پا + جلو پا دستگاه + خیاطی داخل ران</td><td>۶-۸</td></tr>
+      <tr><td>۲</td><td>پشت پا دستگاه + پرس پا + پشت پا تک + پشت پا نشسته</td><td>۶-۸</td></tr>
+      <tr><td>۳</td><td>اسکات دمبل + صاف پا پرسی + صاف پا دستگاه</td><td>۶-۸</td></tr>
+      <tr><td>۴</td><td>لیفت</td><td>۶-۸</td></tr>
+      <tr><td>۵</td><td>شکم خلبانی</td><td>تا ناتوانی</td></tr>
+    </table>
+    <div class="note">⏱ استراحت: ۸-۱۰ ثانیه بین حرکات داخل بلوک | ۱.۵-۲ دقیقه بین بلوک‌ها</div>
+  </div>
+
+  <!-- روز ۴ -->
+  <div class="day mamoot">
+    <div class="day-title"><span class="day-num">۴</span><span>بک + سرشانه + کول — سیستم ماموت</span></div>
+    <table>
+      <tr><th>بلوک</th><th>حرکات</th><th>تکرار</th></tr>
+      <tr><td>۱</td><td>زیربغل دستگاه ایکس + لت از جلو + پارویی T بار</td><td>۶-۸</td></tr>
+      <tr><td>۲</td><td>سرشانه دستگاه + آرنولدی + نشر جانبی تک جلو + نشر جانبی تک V</td><td>۶-۸</td></tr>
+      <tr><td>۳</td><td>دو ضرب قدرتی + کول دمبل + کول اسمیت + کول هالتر ایزد جلو</td><td>۶-۸</td></tr>
+      <tr><td>۴</td><td>نشر از پشت + دمبل میز بالاسینه + نشر پشت هالتر دست باز + فیله کمر صفه</td><td>۸-۱۰</td></tr>
+    </table>
+    <div class="note">⏱ استراحت: ۸-۱۰ ثانیه بین حرکات داخل بلوک | ۱.۵-۲ دقیقه بین بلوک‌ها</div>
+  </div>
+
+  <!-- روز ۵ -->
+  <div class="day drop">
+    <div class="day-title"><span class="day-num">۵</span><span>سینه + بازو + ساعد + شکم — دراپ‌ست</span></div>
+    <table>
+      <tr><th>#</th><th>حرکت</th><th>سیستم</th><th>تکرار</th></tr>
+      <tr><td>۱</td><td>پرس سینه هالتر</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۲</td><td>پرس بالاسینه دمبل + موازی</td><td><span class="tag super">سوپرست</span></td><td>۸-۱۰</td></tr>
+      <tr><td>۳</td><td>پرس زیرسینه هالتر</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۴</td><td>فلای دستگاه</td><td><span class="tag normal">عادی</span></td><td>۱۰-۱۲</td></tr>
+      <tr><td>۵</td><td>جلو بازو میله صاف سیم‌کش</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۶</td><td>جلو بازو دمبل چکشی</td><td><span class="tag normal">عادی</span></td><td>۱۰-۱۲</td></tr>
+      <tr><td>۷</td><td>پشت بازو میله صاف سیم‌کش</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۸</td><td>پشت بازو دیپ</td><td><span class="tag drop">دراپ‌ست</span></td><td>تا ناتوانی</td></tr>
+      <tr><td>۹</td><td>ساعد صفه + دمبل چرخشی</td><td><span class="tag super">سوپرست</span></td><td>۱۲-۱۵</td></tr>
+      <tr><td>۱۰</td><td>شکم خلبانی</td><td><span class="tag normal">عادی</span></td><td>تا ناتوانی</td></tr>
+    </table>
+    <div class="note">⏱ استراحت: ۱-۱.۵ دقیقه بین دراپ‌ست‌ها | ۶۰-۹۰ ثانیه بین حرکات عادی</div>
+  </div>
+
+  <!-- روز ۶ -->
+  <div class="day drop">
+    <div class="day-title"><span class="day-num">۶</span><span>پا + بک + سرشانه + کول + فیله — دراپ‌ست</span></div>
+    <table>
+      <tr><th>#</th><th>حرکت</th><th>سیستم</th><th>تکرار</th></tr>
+      <tr><td>۱</td><td>جلو پا دستگاه</td><td><span class="tag drop">دراپ‌ست</span></td><td>۱۰+۸+۶</td></tr>
+      <tr><td>۲</td><td>اسکات اسمیت</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۳</td><td>پشت پا دستگاه اسمیت</td><td><span class="tag drop">دراپ‌ست</span></td><td>۱۰+۸+۶</td></tr>
+      <tr><td>۴</td><td>ساق پا دستگاه</td><td><span class="tag normal">عادی</span></td><td>۱۲-۱۵</td></tr>
+      <tr><td>۵</td><td>لت از جلو دستگاه</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۶</td><td>تی بار</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۷</td><td>سرشانه دستگاه</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۸</td><td>سرشانه اسمیت</td><td><span class="tag drop">دراپ‌ست</span></td><td>۸+۶+۴</td></tr>
+      <tr><td>۹</td><td>کول اسمیت</td><td><span class="tag normal">عادی</span></td><td>۱۰-۱۲</td></tr>
+      <tr><td>۱۰</td><td>فیله با صفه</td><td><span class="tag normal">عادی</span></td><td>۱۵-۲۰</td></tr>
+    </table>
+    <div class="note">⏱ استراحت: ۱-۱.۵ دقیقه بین دراپ‌ست‌ها | ۶۰-۹۰ ثانیه بین حرکات عادی</div>
+  </div>
+
+  <!-- هشدارها -->
+  <div class="warn">
+    <h3>⚠️ نکات حیاتی</h3>
+    <ul>
+      <li>مدت اجرا: حداکثر ۲-۳ هفته، سپس ۱ هفته دیلود کامل</li>
+      <li>خواب ۸+ ساعت | تغذیه پرپروتئین | آب کافی</li>
+      <li>علائم بیش‌تمرینی: افت قدرت، بی‌انگیزگی، درد مفصلی → استراحت فوری</li>
+      <li>حداقل ۱ روز استراحت کامل در میانه هفته</li>
+      <li>مبتدی: اصلاً توصیه نمی‌شود</li>
+    </ul>
+  </div>
+
+  <!-- فوتر تماس -->
+  <div class="contact-footer">
+    <h3>📩 برای دریافت برنامه شخصی خودت</h3>
+    <p>کافیه در پیام‌رسان‌های زیر پیام بدی:</p>
+    <div class="phone">۰۹۰۲۳۹۸۹۷۸۸</div>
+    <div class="apps">
+      <span class="app-badge">🟣 روبیکا</span>
+      <span class="app-badge">🔵 ایتا</span>
+      <span class="app-badge">🟢 واتساپ</span>
+      <span class="app-badge">🔷 تلگرام</span>
+    </div>
+    <p>منتظرت هستم 💪</p>
+  </div>
+
+  <footer>طراحی اختصاصی برای محمد مهدی قاسمی</footer>
+
+</div>
+
+<!-- === اسکریپت شمارش معکوس شهریه === -->
+<script>
+  // ⚙️ تاریخ سررسید — اینجا عوض کن
+  // فرمت: (سال میلادی، ماه - 1، روز، ساعت، دقیقه، ثانیه)
+  // ماه از 0 شروع می‌شه: ژانویه=0 ... دسامبر=11
+  const dueDate = new Date(2026, 10, 16, 23, 59, 59);
+
+  // تاریخ شروع دوره (۳۰ روز قبل از سررسید)
+  const startDate = new Date(dueDate);
+  startDate.setDate(startDate.getDate() - 30);
+
+  // تبدیل به تاریخ شمسی
+  function toPersianDate(date) {
+    try {
+      return date.toLocaleDateString('fa-IR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    } catch(e) {
+      return date.toLocaleDateString('fa-IR');
+    }
+  }
+
+  // تابع اصلی بروزرسانی
+  function updateFee() {
+    const now = new Date();
+    const diff = dueDate - now;
+
+    const remainingEl = document.getElementById('remaining-time');
+    const dueEl = document.getElementById('due-date');
+    const barEl = document.getElementById('progress-bar');
+
+    if (!remainingEl || !dueEl || !barEl) return;
+
+    // نمایش تاریخ سررسید
+    dueEl.textContent = toPersianDate(dueDate);
+
+    // حالت منقضی
+    if (diff <= 0) {
+      remainingEl.textContent = '⛔ منقضی شده — تمدید کن';
+      remainingEl.className = 'value danger';
+      barEl.style.width = '100%';
+      barEl.className = 'fee-progress-bar danger';
+      return;
+    }
+
+    // محاسبه روز و دقیقه (بدون ساعت)
+    const totalMinutes = Math.floor(diff / (1000 * 60));
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const minutes = totalMinutes % 60;
+
+    let text = '';
+    if (days > 0) {
+      text = days + ' روز';
+    } else {
+      text = minutes + ' دقیقه';
+    }
+
+    remainingEl.textContent = text;
+
+    // محاسبه درصد پیشرفت
+    const total = dueDate - startDate;
+    const passed = now - startDate;
+    const percent = Math.min(100, Math.max(0, (passed / total) * 100));
+    barEl.style.width = percent + '%';
+
+    // تغییر رنگ بر اساس روزهای باقی‌مانده
+    if (days <= 3) {
+      remainingEl.className = 'value danger';
+      barEl.className = 'fee-progress-bar danger';
+    } else if (days <= 7) {
+      remainingEl.className = 'value warning';
+      barEl.className = 'fee-progress-bar warning';
+    } else {
+      remainingEl.className = 'value ok';
+      barEl.className = 'fee-progress-bar';
+    }
+  }
+
+  // اجرای اولیه بعد از لود کامل صفحه
+  window.addEventListener('DOMContentLoaded', function() {
+    updateFee();
+    setInterval(updateFee, 60000); // هر ۱ دقیقه آپدیت
+  });
+</script>
+
+</body>
+</html>
